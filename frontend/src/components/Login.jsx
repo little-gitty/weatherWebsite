@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import apiClient from "../config/api";
 import "./Auth.css";
 
 export default function Login({ onLoginSuccess }) {
@@ -19,7 +19,7 @@ export default function Login({ onLoginSuccess }) {
 
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/auth/login", {
+      const { data } = await apiClient.post("/api/auth/login", {
         username,
         password,
       });

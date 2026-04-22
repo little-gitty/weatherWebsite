@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import apiClient from "./config/api";
 import SearchBar  from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
 import MapView    from "./components/MapView";
@@ -62,7 +62,7 @@ export default function App() {
   // ── Fetch saved cities on mount ───────────────────────────
   const fetchCities = useCallback(async () => {
     if (!userId) return;
-    const { data } = await axios.get(`/api/cities/${userId}`);
+    const { data } = await apiClient.get(`/api/cities/${userId}`);
     setCities(data);
   }, [userId]);
 
@@ -79,7 +79,7 @@ export default function App() {
     setWeather(null);
 
     try {
-      const { data } = await axios.get(`/api/weather/${encodeURIComponent(city)}`);
+      const { data } = await apiClient.get(`/api/weather/${encodeURIComponent(city)}`);
       setWeather(data);
       setMapCoords({ lat: data.lat, lon: data.lon });
     } catch (err) {
@@ -93,7 +93,7 @@ export default function App() {
   const handleSave = async () => {
     if (!weather) return;
     try {
-      await axios.post("/api/cities", {
+      await apiClient.post("/api/cities", {
         userId,
         name: weather.city,
         lat:  weather.lat,
@@ -108,7 +108,7 @@ export default function App() {
   // ── Delete city ───────────────────────────────────────────
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/cities/${id}`);
+      await apiClient.delete(`/api/cities/${id}`);
       fetchCities();
     } catch {
       setError("Failed to delete city.");
@@ -118,7 +118,7 @@ export default function App() {
   // ── Update city name ──────────────────────────────────────
   const handleUpdate = async (id, name) => {
     try {
-      await axios.put(`/api/cities/${id}`, { name });
+      await apiClient.put(`/api/cities/${id}`, { name });
       fetchCities();
     } catch {
       setError("Failed to update city.");

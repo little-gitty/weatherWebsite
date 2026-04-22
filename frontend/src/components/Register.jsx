@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import apiClient from "../config/api";
 import "./Auth.css";
 
 export default function Register({ onRegisterSuccess }) {
@@ -26,7 +26,7 @@ export default function Register({ onRegisterSuccess }) {
 
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/auth/register", {
+      const { data } = await apiClient.post("/api/auth/register", {
         username,
         email,
         password,
